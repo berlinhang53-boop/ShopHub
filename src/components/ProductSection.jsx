@@ -97,19 +97,41 @@
 
 
 
-
 import { useState } from "react"
+
 import products from "../data/product"
+
 import ProductCard from "./ProductCard"
+
 import ProductDetails from "./ProductDetails"
+
 
 function ProductSection({
   onAddToCart,
   selectedCategory,
   onCategorySelect,
+  wishlist,
+  onToggleWishlist,
 }) {
+
+  // =========================
+  // SEARCH
+  // =========================
+
   const [search, setSearch] = useState("")
-  const [selectedProduct, setSelectedProduct] = useState(null)
+
+
+  // =========================
+  // SELECTED PRODUCT
+  // =========================
+
+  const [selectedProduct, setSelectedProduct] =
+    useState(null)
+
+
+  // =========================
+  // CATEGORIES
+  // =========================
 
   const categories = [
     "All",
@@ -119,24 +141,41 @@ function ProductSection({
     "Sports",
   ]
 
-  const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      selectedCategory === "All" ||
-      product.category === selectedCategory
 
-    const matchesSearch =
-      product.name
-        .toLowerCase()
-        .includes(search.toLowerCase())
+  // =========================
+  // FILTER PRODUCTS
+  // =========================
 
-    return matchesCategory && matchesSearch
-  })
+  const filteredProducts =
+    products.filter((product) => {
+
+      const matchesCategory =
+        selectedCategory === "All" ||
+        product.category === selectedCategory
+
+
+      const matchesSearch =
+        product.name
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          )
+
+
+      return (
+        matchesCategory &&
+        matchesSearch
+      )
+
+    })
+
 
   return (
     <section
       id="products"
       className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20"
     >
+
 
       {/* =========================
           HEADING
@@ -169,7 +208,9 @@ function ProductSection({
           type="text"
           placeholder="Search products..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
           className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:px-5 sm:text-base"
         />
 
@@ -182,19 +223,27 @@ function ProductSection({
 
       <div className="mt-6 flex gap-2 overflow-x-auto pb-2 sm:mt-8 sm:flex-wrap sm:justify-center sm:overflow-visible">
 
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategorySelect(category)}
-            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition sm:px-5 ${
-              selectedCategory === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
+        {categories.map(
+          (category) => (
+
+            <button
+              key={category}
+              onClick={() =>
+                onCategorySelect(
+                  category
+                )
+              }
+              className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition sm:px-5 ${
+                selectedCategory === category
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              {category}
+            </button>
+
+          )
+        )}
 
       </div>
 
@@ -207,14 +256,32 @@ function ProductSection({
 
         {filteredProducts.length > 0 ? (
 
-          filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={onAddToCart}
-              onProductClick={setSelectedProduct}
-            />
-          ))
+          filteredProducts.map(
+            (product) => (
+
+              <ProductCard
+                key={product.id}
+                product={product}
+
+                onAddToCart={
+                  onAddToCart
+                }
+
+                onProductClick={
+                  setSelectedProduct
+                }
+
+                wishlist={
+                  wishlist
+                }
+
+                onToggleWishlist={
+                  onToggleWishlist
+                }
+              />
+
+            )
+          )
 
         ) : (
 
@@ -236,19 +303,38 @@ function ProductSection({
 
 
       {/* =========================
-          PRODUCT DETAILS MODAL
+          PRODUCT DETAILS
       ========================== */}
 
       {selectedProduct && (
+
         <ProductDetails
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={onAddToCart}
+          product={
+            selectedProduct
+          }
+
+          onClose={() =>
+            setSelectedProduct(null)
+          }
+
+          onAddToCart={
+            onAddToCart
+          }
+
+          wishlist={
+            wishlist
+          }
+
+          onToggleWishlist={
+            onToggleWishlist
+          }
         />
+
       )}
 
     </section>
   )
 }
+
 
 export default ProductSection

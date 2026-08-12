@@ -159,8 +159,6 @@
 
 
 
-
-
 import { useState } from "react"
 
 import Navbar from "./components/Navbar"
@@ -169,39 +167,97 @@ import Categories from "./components/Categories"
 import ProductSection from "./components/ProductSection"
 import Cart from "./components/Cart"
 import Footer from "./components/Footer"
+import Toast from "./components/Toast"
+
 
 function App() {
-  // Cart state
+
+  // =========================
+  // CART
+  // =========================
+
   const [cart, setCart] = useState([])
 
-  // Cart sidebar state
+
+  // =========================
+  // CART SIDEBAR
+  // =========================
+
   const [cartOpen, setCartOpen] = useState(false)
 
-  // Selected category
-  const [selectedCategory, setSelectedCategory] = useState("All")
+
+  // =========================
+  // CATEGORY
+  // =========================
+
+  const [selectedCategory, setSelectedCategory] =
+    useState("All")
 
 
-  // -----------------------------
-  // ADD PRODUCT TO CART
-  // -----------------------------
+  // =========================
+  // WISHLIST
+  // =========================
+
+  const [wishlist, setWishlist] =
+    useState([])
+
+
+  // =========================
+  // TOAST
+  // =========================
+
+  const [toast, setToast] =
+    useState(null)
+
+
+  // =========================
+  // SHOW TOAST
+  // =========================
+
+  const showToast = (message) => {
+
+    setToast({
+      message,
+    })
+
+
+    setTimeout(() => {
+      setToast(null)
+    }, 3000)
+
+  }
+
+
+  // =========================
+  // ADD TO CART
+  // =========================
 
   const addToCart = (product) => {
+
     setCart((currentCart) => {
 
-      const existingProduct = currentCart.find(
-        (item) => item.id === product.id
-      )
+      const existingProduct =
+        currentCart.find(
+          (item) =>
+            item.id === product.id
+        )
+
 
       if (existingProduct) {
-        return currentCart.map((item) =>
-          item.id === product.id
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-              }
-            : item
+
+        return currentCart.map(
+          (item) =>
+            item.id === product.id
+              ? {
+                  ...item,
+                  quantity:
+                    item.quantity + 1,
+                }
+              : item
         )
+
       }
+
 
       return [
         ...currentCart,
@@ -210,66 +266,134 @@ function App() {
           quantity: 1,
         },
       ]
+
     })
+
+
+    showToast(
+      `${product.name} added to cart`
+    )
+
   }
 
 
-  // -----------------------------
+  // =========================
   // REMOVE FROM CART
-  // -----------------------------
+  // =========================
 
   const removeFromCart = (id) => {
+
     setCart((currentCart) =>
       currentCart.filter(
         (item) => item.id !== id
       )
     )
+
+    showToast(
+      "Product removed from cart"
+    )
+
   }
 
 
-  // -----------------------------
-  // INCREASE QUANTITY
-  // -----------------------------
+  // =========================
+  // INCREASE
+  // =========================
 
   const increaseQuantity = (id) => {
+
     setCart((currentCart) =>
-      currentCart.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item
-      )
-    )
-  }
-
-
-  // -----------------------------
-  // DECREASE QUANTITY
-  // -----------------------------
-
-  const decreaseQuantity = (id) => {
-    setCart((currentCart) =>
-      currentCart
-        .map((item) =>
+      currentCart.map(
+        (item) =>
           item.id === id
             ? {
                 ...item,
-                quantity: item.quantity - 1,
+                quantity:
+                  item.quantity + 1,
               }
             : item
+      )
+    )
+
+  }
+
+
+  // =========================
+  // DECREASE
+  // =========================
+
+  const decreaseQuantity = (id) => {
+
+    setCart((currentCart) =>
+      currentCart
+        .map(
+          (item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  quantity:
+                    item.quantity - 1,
+                }
+              : item
         )
         .filter(
           (item) => item.quantity > 0
         )
     )
+
   }
 
 
-  // -----------------------------
-  // CART COUNT
-  // -----------------------------
+  // =========================
+  // WISHLIST
+  // =========================
+
+  const toggleWishlist = (product) => {
+
+    setWishlist(
+      (currentWishlist) => {
+
+        const alreadyExists =
+          currentWishlist.some(
+            (item) =>
+              item.id === product.id
+          )
+
+
+        if (alreadyExists) {
+
+          showToast(
+            `${product.name} removed from wishlist`
+          )
+
+
+          return currentWishlist.filter(
+            (item) =>
+              item.id !== product.id
+          )
+
+        }
+
+
+        showToast(
+          `${product.name} added to wishlist`
+        )
+
+
+        return [
+          ...currentWishlist,
+          product,
+        ]
+
+      }
+    )
+
+  }
+
+
+  // =========================
+  // COUNTS
+  // =========================
 
   const cartCount = cart.reduce(
     (total, item) =>
@@ -278,24 +402,38 @@ function App() {
   )
 
 
+  const wishlistCount =
+    wishlist.length
+
+
   return (
     <>
-      {/* Navbar */}
+
+      {/* =========================
+          NAVBAR
+      ========================== */}
 
       <Navbar
         cartCount={cartCount}
+        wishlistCount={
+          wishlistCount
+        }
         onCartClick={() =>
           setCartOpen(true)
         }
       />
 
 
-      {/* Hero */}
+      {/* =========================
+          HERO
+      ========================== */}
 
       <Hero />
 
 
-      {/* Categories */}
+      {/* =========================
+          CATEGORIES
+      ========================== */}
 
       <Categories
         onCategorySelect={
@@ -304,7 +442,9 @@ function App() {
       />
 
 
-      {/* Products */}
+      {/* =========================
+          PRODUCTS
+      ========================== */}
 
       <ProductSection
         onAddToCart={addToCart}
@@ -314,15 +454,23 @@ function App() {
         onCategorySelect={
           setSelectedCategory
         }
+        wishlist={wishlist}
+        onToggleWishlist={
+          toggleWishlist
+        }
       />
 
 
-      {/* Footer */}
+      {/* =========================
+          FOOTER
+      ========================== */}
 
       <Footer />
 
 
-      {/* Cart */}
+      {/* =========================
+          CART
+      ========================== */}
 
       {cartOpen && (
         <Cart
@@ -341,8 +489,22 @@ function App() {
           }
         />
       )}
+
+
+      {/* =========================
+          TOAST
+      ========================== */}
+
+      <Toast
+        toast={toast}
+        onClose={() =>
+          setToast(null)
+        }
+      />
+
     </>
   )
 }
+
 
 export default App
