@@ -158,7 +158,6 @@
 // export default App
 
 
-
 import { useState } from "react"
 
 import Navbar from "./components/Navbar"
@@ -166,6 +165,7 @@ import Hero from "./components/Hero"
 import Categories from "./components/Categories"
 import ProductSection from "./components/ProductSection"
 import Cart from "./components/Cart"
+import Checkout from "./components/Checkout"
 import Footer from "./components/Footer"
 import Toast from "./components/Toast"
 
@@ -180,10 +180,18 @@ function App() {
 
 
   // =========================
-  // CART SIDEBAR
+  // CART OPEN
   // =========================
 
   const [cartOpen, setCartOpen] = useState(false)
+
+
+  // =========================
+  // CHECKOUT OPEN
+  // =========================
+
+  const [checkoutOpen, setCheckoutOpen] =
+    useState(false)
 
 
   // =========================
@@ -219,7 +227,6 @@ function App() {
     setToast({
       message,
     })
-
 
     setTimeout(() => {
       setToast(null)
@@ -392,6 +399,31 @@ function App() {
 
 
   // =========================
+  // PLACE ORDER
+  // =========================
+
+  const handlePlaceOrder = (
+    orderData
+  ) => {
+
+    console.log(
+      "Order:",
+      orderData
+    )
+
+
+    setCart([])
+
+    setCheckoutOpen(false)
+
+    showToast(
+      "🎉 Order placed successfully!"
+    )
+
+  }
+
+
+  // =========================
   // COUNTS
   // =========================
 
@@ -410,84 +442,113 @@ function App() {
     <>
 
       {/* =========================
-          NAVBAR
+          MAIN SHOP
       ========================== */}
 
-      <Navbar
-        cartCount={cartCount}
-        wishlistCount={
-          wishlistCount
-        }
-        onCartClick={() =>
-          setCartOpen(true)
-        }
-      />
+      {!checkoutOpen && (
+        <>
+
+          <Navbar
+            cartCount={cartCount}
+            wishlistCount={
+              wishlistCount
+            }
+            onCartClick={() =>
+              setCartOpen(true)
+            }
+          />
 
 
-      {/* =========================
-          HERO
-      ========================== */}
-
-      <Hero />
+          <Hero />
 
 
-      {/* =========================
-          CATEGORIES
-      ========================== */}
-
-      <Categories
-        onCategorySelect={
-          setSelectedCategory
-        }
-      />
+          <Categories
+            onCategorySelect={
+              setSelectedCategory
+            }
+          />
 
 
-      {/* =========================
-          PRODUCTS
-      ========================== */}
+          <ProductSection
+            onAddToCart={
+              addToCart
+            }
+            selectedCategory={
+              selectedCategory
+            }
+            onCategorySelect={
+              setSelectedCategory
+            }
+            wishlist={
+              wishlist
+            }
+            onToggleWishlist={
+              toggleWishlist
+            }
+          />
 
-      <ProductSection
-        onAddToCart={addToCart}
-        selectedCategory={
-          selectedCategory
-        }
-        onCategorySelect={
-          setSelectedCategory
-        }
-        wishlist={wishlist}
-        onToggleWishlist={
-          toggleWishlist
-        }
-      />
 
+          <Footer />
 
-      {/* =========================
-          FOOTER
-      ========================== */}
-
-      <Footer />
+        </>
+      )}
 
 
       {/* =========================
           CART
       ========================== */}
 
-      {cartOpen && (
+      {cartOpen && !checkoutOpen && (
+
         <Cart
           cart={cart}
+
           onClose={() =>
             setCartOpen(false)
           }
+
           onRemove={
             removeFromCart
           }
+
           onIncrease={
             increaseQuantity
           }
+
           onDecrease={
             decreaseQuantity
           }
+
+          onCheckout={() => {
+
+            setCartOpen(false)
+
+            setCheckoutOpen(true)
+
+          }}
         />
+
+      )}
+
+
+      {/* =========================
+          CHECKOUT
+      ========================== */}
+
+      {checkoutOpen && (
+
+        <Checkout
+          cart={cart}
+
+          onBack={() =>
+            setCheckoutOpen(false)
+          }
+
+          onPlaceOrder={
+            handlePlaceOrder
+          }
+        />
+
       )}
 
 
@@ -505,6 +566,5 @@ function App() {
     </>
   )
 }
-
 
 export default App
