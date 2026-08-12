@@ -268,13 +268,15 @@
 
 
 
-
 import { useEffect, useState } from "react"
 
 import ProductCard from "./ProductCard"
 import ProductDetails from "./ProductDetails"
 
-import { getProducts } from "../services/api"
+import {
+  getProducts,
+  getCategories,
+} from "../services/api"
 
 
 function ProductSection({
@@ -297,6 +299,15 @@ function ProductSection({
 
 
   // =========================
+  // CATEGORIES
+  // =========================
+
+  const [categories, setCategories] = useState([
+    "All",
+  ])
+
+
+  // =========================
   // SEARCH
   // =========================
 
@@ -312,20 +323,7 @@ function ProductSection({
 
 
   // =========================
-  // CATEGORIES
-  // =========================
-
-  const categories = [
-    "All",
-    "Electronics",
-    "Fashion",
-    "Accessories",
-    "Sports",
-  ]
-
-
-  // =========================
-  // GET PRODUCTS FROM API
+  // LOAD PRODUCTS
   // =========================
 
   useEffect(() => {
@@ -365,6 +363,47 @@ function ProductSection({
 
 
     loadProducts()
+
+  }, [])
+
+
+  // =========================
+  // LOAD CATEGORIES
+  // =========================
+
+  useEffect(() => {
+
+    const loadCategories = async () => {
+
+      try {
+
+        const data = await getCategories()
+
+
+        const categoryNames = data.map(
+          (category) => category.name
+        )
+
+
+        setCategories([
+          "All",
+          ...categoryNames,
+        ])
+
+      }
+      catch (error) {
+
+        console.error(
+          "Categories API Error:",
+          error
+        )
+
+      }
+
+    }
+
+
+    loadCategories()
 
   }, [])
 
@@ -458,11 +497,13 @@ function ProductSection({
 
             <button
               key={category}
+
               onClick={() =>
                 onCategorySelect(
                   category
                 )
               }
+
               className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition sm:px-5 ${
                 selectedCategory === category
                   ? "bg-blue-600 text-white"
