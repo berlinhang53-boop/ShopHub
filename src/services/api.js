@@ -1,84 +1,3 @@
-// const API_URL = import.meta.env.VITE_API_URL;
-
-
-// // ==========================================
-// // GET ALL PRODUCTS
-// // ==========================================
-
-// export async function getProducts() {
-//   const response = await fetch(`${API_URL}/products`);
-
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch products");
-//   }
-
-//   return await response.json();
-// }
-
-
-// // ==========================================
-// // GET SINGLE PRODUCT
-// // ==========================================
-
-// export async function getProduct(id) {
-//   const response = await fetch(`${API_URL}/products/${id}`);
-
-//   if (!response.ok) {
-//     throw new Error("Product not found");
-//   }
-
-//   return await response.json();
-// }
-
-
-// // ==========================================
-// // GET ALL CATEGORIES
-// // ==========================================
-
-// export async function getCategories() {
-//   const response = await fetch(`${API_URL}/categories`);
-
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch categories");
-//   }
-
-//   return await response.json();
-// }
-
-
-// // ==========================================
-// // CREATE ORDER
-// // ==========================================
-
-// export async function createOrder(orderData) {
-//   const response = await fetch(`${API_URL}/orders`, {
-//     method: "POST",
-
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-
-//     body: JSON.stringify(orderData),
-//   });
-
-//   if (!response.ok) {
-//     throw new Error("Failed to create order");
-//   }
-
-//   return await response.json();
-// }
-
-
-
-
-
-
-
-
-
-
-
-
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -92,18 +11,27 @@ export async function getProducts() {
   const response =
     await fetch(`${API_URL}/products`);
 
+  const data =
+    await response
+      .json()
+      .catch(() => null);
 
   if (!response.ok) {
 
+    console.error(
+      "Get Products API Error:",
+      data
+    );
+
     throw new Error(
+      data?.message ||
+      data?.title ||
       "Failed to fetch products"
     );
 
   }
 
-
-  return await response.json();
-
+  return data;
 }
 
 
@@ -118,18 +46,27 @@ export async function getProduct(id) {
       `${API_URL}/products/${id}`
     );
 
+  const data =
+    await response
+      .json()
+      .catch(() => null);
 
   if (!response.ok) {
 
+    console.error(
+      "Get Product API Error:",
+      data
+    );
+
     throw new Error(
+      data?.message ||
+      data?.title ||
       "Product not found"
     );
 
   }
 
-
-  return await response.json();
-
+  return data;
 }
 
 
@@ -144,18 +81,27 @@ export async function getCategories() {
       `${API_URL}/categories`
     );
 
+  const data =
+    await response
+      .json()
+      .catch(() => null);
 
   if (!response.ok) {
 
+    console.error(
+      "Get Categories API Error:",
+      data
+    );
+
     throw new Error(
+      data?.message ||
+      data?.title ||
       "Failed to fetch categories"
     );
 
   }
 
-
-  return await response.json();
-
+  return data;
 }
 
 
@@ -185,12 +131,10 @@ export async function createProduct(
       }
     );
 
-
   const data =
     await response
       .json()
       .catch(() => null);
-
 
   if (!response.ok) {
 
@@ -198,7 +142,6 @@ export async function createProduct(
       "Create Product Error:",
       data
     );
-
 
     throw new Error(
       data?.message ||
@@ -208,9 +151,7 @@ export async function createProduct(
 
   }
 
-
   return data;
-
 }
 
 
@@ -241,12 +182,10 @@ export async function updateProduct(
       }
     );
 
-
   const data =
     await response
       .json()
       .catch(() => null);
-
 
   if (!response.ok) {
 
@@ -254,7 +193,6 @@ export async function updateProduct(
       "Update Product Error:",
       data
     );
-
 
     throw new Error(
       data?.message ||
@@ -264,9 +202,7 @@ export async function updateProduct(
 
   }
 
-
   return data;
-
 }
 
 
@@ -286,12 +222,10 @@ export async function deleteProduct(
       }
     );
 
-
   const data =
     await response
       .json()
       .catch(() => null);
-
 
   if (!response.ok) {
 
@@ -299,7 +233,6 @@ export async function deleteProduct(
       "Delete Product Error:",
       data
     );
-
 
     throw new Error(
       data?.message ||
@@ -309,9 +242,7 @@ export async function deleteProduct(
 
   }
 
-
   return data;
-
 }
 
 
@@ -341,10 +272,10 @@ export async function createOrder(
       }
     );
 
-
   const data =
-    await response.json();
-
+    await response
+      .json()
+      .catch(() => null);
 
   if (!response.ok) {
 
@@ -353,23 +284,23 @@ export async function createOrder(
       data
     );
 
-
     throw new Error(
-      data.message ||
-      data.title ||
+      data?.message ||
+      data?.title ||
       "Failed to create order"
     );
 
   }
 
-
   return data;
-
 }
 
 
 // ==========================================
 // GET ORDER BY ID
+// ==========================================
+// Used by OrderConfirmation.jsx
+// GET: api/orders/{id}
 // ==========================================
 
 export async function getOrder(
@@ -381,10 +312,10 @@ export async function getOrder(
       `${API_URL}/orders/${orderId}`
     );
 
-
   const data =
-    await response.json();
-
+    await response
+      .json()
+      .catch(() => null);
 
   if (!response.ok) {
 
@@ -393,17 +324,104 @@ export async function getOrder(
       data
     );
 
-
     throw new Error(
-      data.message ||
-      data.title ||
+      data?.message ||
+      data?.title ||
       "Failed to get order"
     );
 
   }
 
+  return data;
+}
+
+
+// ==========================================
+// GET ALL ORDERS
+// ==========================================
+// Used by AdminOrders.jsx
+// GET: api/orders
+// ==========================================
+
+export async function getOrders() {
+
+  const response =
+    await fetch(
+      `${API_URL}/orders`
+    );
+
+  const data =
+    await response
+      .json()
+      .catch(() => null);
+
+  if (!response.ok) {
+
+    console.error(
+      "Get Orders API Error:",
+      data
+    );
+
+    throw new Error(
+      data?.message ||
+      data?.title ||
+      "Failed to get orders"
+    );
+
+  }
+
+  return data;
+}
+
+
+// ==========================================
+// UPDATE ORDER STATUS
+// ==========================================
+// Used by AdminOrders.jsx
+// PUT: api/orders/{id}/status
+// ==========================================
+
+export async function updateOrderStatus(
+  orderId,
+  status
+) {
+
+  const response =
+    await fetch(
+      `${API_URL}/orders/${orderId}/status`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body:
+          JSON.stringify(status),
+      }
+    );
+
+  const data =
+    await response
+      .json()
+      .catch(() => null);
+
+  if (!response.ok) {
+
+    console.error(
+      "Update Order Status Error:",
+      data
+    );
+
+    throw new Error(
+      data?.message ||
+      data?.title ||
+      "Failed to update order status"
+    );
+
+  }
 
   return data;
 
 }
-
