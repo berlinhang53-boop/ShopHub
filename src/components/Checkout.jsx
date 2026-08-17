@@ -69,17 +69,33 @@ function Checkout({
   // SUBMIT
   // =========================
 
-  const handleSubmit = (e) => {
+//   const handleSubmit = (e) => {
 
-    e.preventDefault()
+//     e.preventDefault()
 
-    onPlaceOrder({
-      customer: form,
-      paymentMethod,
-      total,
-    })
+//     onPlaceOrder({
+//       customer: form,
+//       paymentMethod,
+//       total,
+//     })
 
-  }
+//   }
+
+
+const handleSubmit = (e) => {
+
+  e.preventDefault()
+
+  onPlaceOrder({
+    name: `${form.firstName} ${form.lastName}`.trim(),
+    email: form.email,
+    phone: form.phone,
+    address: `${form.address}, ${form.city}${form.postalCode ? `, ${form.postalCode}` : ""}`,
+    paymentMethod,
+    total,
+  })
+
+}
 
 
   return (

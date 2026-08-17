@@ -103,18 +103,87 @@ export async function getCategories() {
   return await response.json();
 }
 
+// export async function createOrder(orderData) {
+//   const response = await fetch(`${API_URL}/orders`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(orderData),
+//   });
+
+//   if (!response.ok) {
+//     throw new Error("Failed to create order");
+//   }
+
+//   return await response.json();
+// }
+
+
 export async function createOrder(orderData) {
+
   const response = await fetch(`${API_URL}/orders`, {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(orderData),
-  });
 
+    body: JSON.stringify(orderData),
+  })
+
+
+  // =========================
+// GET ORDER BY ID
+// =========================
+
+  // Response ko pehle read karo
+  const data = await response.json()
+
+
+  // Agar API error de rahi hai
   if (!response.ok) {
-    throw new Error("Failed to create order");
+
+    console.error(
+      "Order API Error:",
+      data
+    )
+
+    throw new Error(
+      data.message ||
+      data.title ||
+      "Failed to create order"
+    )
+
   }
 
-  return await response.json();
+
+  return data
 }
+
+
+export async function getOrder(orderId) {
+
+  const response = await fetch(
+    `${API_URL}/orders/${orderId}`
+  )
+
+  const data = await response.json()
+
+  if (!response.ok) {
+
+    console.error(
+      "Get Order API Error:",
+      data
+    )
+
+    throw new Error(
+      data.message ||
+      data.title ||
+      "Failed to get order"
+    )
+  }
+
+  return data
+}
+

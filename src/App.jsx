@@ -157,7 +157,6 @@
 
 // export default App
 
-
 import { useState } from "react"
 
 import Navbar from "./components/Navbar"
@@ -168,6 +167,11 @@ import Cart from "./components/Cart"
 import Checkout from "./components/Checkout"
 import Footer from "./components/Footer"
 import Toast from "./components/Toast"
+import OrderConfirmation from "./components/OrderConfirmation"
+
+import { createOrder } from "./services/api"
+
+import AdminOrders from "./components/AdminOrders"
 
 
 function App() {
@@ -215,6 +219,14 @@ function App() {
   // =========================
 
   const [toast, setToast] =
+    useState(null)
+
+
+  // =========================
+  // ORDER CONFIRMATION
+  // =========================
+
+  const [orderId, setOrderId] =
     useState(null)
 
 
@@ -292,7 +304,8 @@ function App() {
 
     setCart((currentCart) =>
       currentCart.filter(
-        (item) => item.id !== id
+        (item) =>
+          item.id !== id
       )
     )
 
@@ -304,7 +317,7 @@ function App() {
 
 
   // =========================
-  // INCREASE
+  // INCREASE QUANTITY
   // =========================
 
   const increaseQuantity = (id) => {
@@ -326,7 +339,7 @@ function App() {
 
 
   // =========================
-  // DECREASE
+  // DECREASE QUANTITY
   // =========================
 
   const decreaseQuantity = (id) => {
@@ -344,7 +357,8 @@ function App() {
               : item
         )
         .filter(
-          (item) => item.quantity > 0
+          (item) =>
+            item.quantity > 0
         )
     )
 
@@ -402,23 +416,109 @@ function App() {
   // PLACE ORDER
   // =========================
 
-  const handlePlaceOrder = (
+  const handlePlaceOrder = async (
     orderData
   ) => {
 
-    console.log(
-      "Order:",
-      orderData
-    )
+    // Don't place empty order
+
+    if (cart.length === 0) {
+      return
+    }
 
 
-    setCart([])
+    try {
 
-    setCheckoutOpen(false)
+      // =========================
+      // CREATE ORDER DATA
+      // =========================
 
-    showToast(
-      "🎉 Order placed successfully!"
-    )
+      const apiOrderData = {
+
+        customerName:
+          orderData.name,
+
+        email:
+          orderData.email,
+
+        phone:
+          orderData.phone,
+
+        address:
+          orderData.address,
+
+        items:
+          cart.map((item) => ({
+
+            productId:
+              item.id,
+
+            quantity:
+              item.quantity,
+
+          })),
+
+      }
+
+
+      console.log(
+        "Sending Order:",
+        apiOrderData
+      )
+
+
+      // =========================
+      // SEND TO API
+      // =========================
+
+      const result =
+        await createOrder(
+          apiOrderData
+        )
+
+
+      console.log(
+        "Order created:",
+        result
+      )
+
+
+      // =========================
+      // SAVE ORDER ID
+      // =========================
+
+      setOrderId(
+        result.orderId
+      )
+
+
+      // =========================
+      // CLEAR CART
+      // =========================
+
+      setCart([])
+
+
+      // =========================
+      // CLOSE CHECKOUT
+      // =========================
+
+      setCheckoutOpen(false)
+
+    }
+    catch (error) {
+
+      console.error(
+        "Order Error:",
+        error
+      )
+
+
+      showToast(
+        "❌ Failed to place order. Please try again."
+      )
+
+    }
 
   }
 
@@ -427,26 +527,36 @@ function App() {
   // COUNTS
   // =========================
 
-  const cartCount = cart.reduce(
-    (total, item) =>
-      total + item.quantity,
-    0
-  )
+  const cartCount =
+    cart.reduce(
+      (total, item) =>
+        total + item.quantity,
+      0
+    )
 
 
   const wishlistCount =
     wishlist.length
 
 
+  // =========================
+  // RETURN
+  // =========================
+
   return (
     <>
 
-      {/* =========================
+      {/* =================================================
           MAIN SHOP
-      ========================== */}
+      ================================================= */}
 
-      {!checkoutOpen && (
+      {!checkoutOpen && !orderId && (
+
         <>
+
+          {/* =========================
+              NAVBAR
+          ========================== */}
 
           <Navbar
             cartCount={cartCount}
@@ -459,8 +569,16 @@ function App() {
           />
 
 
+          {/* =========================
+              HERO
+          ========================== */}
+
           <Hero />
 
+
+          {/* =========================
+              CATEGORIES
+          ========================== */}
 
           <Categories
             onCategorySelect={
@@ -469,75 +587,93 @@ function App() {
           />
 
 
+          {/* =========================
+              PRODUCTS
+          ========================== */}
+
           <ProductSection
             onAddToCart={
               addToCart
             }
+
             selectedCategory={
               selectedCategory
             }
+
             onCategorySelect={
               setSelectedCategory
             }
+
             wishlist={
               wishlist
             }
+
             onToggleWishlist={
               toggleWishlist
             }
           />
 
 
+          {/* =========================
+              FOOTER
+          ========================== */}
+
           <Footer />
 
         </>
+
       )}
 
 
-      {/* =========================
+      {/* =================================================
           CART
-      ========================== */}
+      ================================================= */}
 
-      {cartOpen && !checkoutOpen && (
+      {cartOpen &&
+        !checkoutOpen &&
+        !orderId && (
 
-        <Cart
-          cart={cart}
+          <Cart
 
-          onClose={() =>
-            setCartOpen(false)
-          }
+            cart={cart}
 
-          onRemove={
-            removeFromCart
-          }
+            onClose={() =>
+              setCartOpen(false)
+            }
 
-          onIncrease={
-            increaseQuantity
-          }
+            onRemove={
+              removeFromCart
+            }
 
-          onDecrease={
-            decreaseQuantity
-          }
+            onIncrease={
+              increaseQuantity
+            }
 
-          onCheckout={() => {
+            onDecrease={
+              decreaseQuantity
+            }
 
-            setCartOpen(false)
+            onCheckout={() => {
 
-            setCheckoutOpen(true)
+              setCartOpen(false)
 
-          }}
-        />
+              setCheckoutOpen(true)
 
-      )}
+            }}
+
+          />
+
+        )}
 
 
-      {/* =========================
+      {/* =================================================
           CHECKOUT
-      ========================== */}
+      ================================================= */}
 
       {checkoutOpen && (
 
         <Checkout
+
           cart={cart}
 
           onBack={() =>
@@ -547,24 +683,60 @@ function App() {
           onPlaceOrder={
             handlePlaceOrder
           }
+
         />
 
       )}
 
 
-      {/* =========================
+      {/* =================================================
+          ORDER CONFIRMATION
+      ================================================= */}
+
+      {orderId &&
+        !checkoutOpen && (
+
+          <OrderConfirmation
+
+            orderId={
+              orderId
+            }
+
+            onContinueShopping={() => {
+
+              setOrderId(null)
+
+              setSelectedCategory(
+                "All"
+              )
+
+            }}
+
+          />
+
+        )}
+
+
+      {/* =================================================
           TOAST
-      ========================== */}
+      ================================================= */}
 
       <Toast
+
         toast={toast}
+
         onClose={() =>
           setToast(null)
         }
+
       />
+
+      <AdminOrders/>
 
     </>
   )
+
 }
+
 
 export default App
