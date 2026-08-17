@@ -157,6 +157,7 @@
 
 // export default App
 
+
 import { useState } from "react"
 
 import Navbar from "./components/Navbar"
@@ -168,10 +169,20 @@ import Checkout from "./components/Checkout"
 import Footer from "./components/Footer"
 import Toast from "./components/Toast"
 import OrderConfirmation from "./components/OrderConfirmation"
+import AdminOrders from "./components/AdminOrders"
+
+import AdminDashboard from "./components/AdminDashboard"
 
 import { createOrder } from "./services/api"
+import AdminProducts from "./components/AdminProducts"
 
-import AdminOrders from "./components/AdminOrders"
+import AdminCategories from "./components/AdminCategories"
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom"
 
 
 function App() {
@@ -187,7 +198,8 @@ function App() {
   // CART OPEN
   // =========================
 
-  const [cartOpen, setCartOpen] = useState(false)
+  const [cartOpen, setCartOpen] =
+    useState(false)
 
 
   // =========================
@@ -420,8 +432,6 @@ function App() {
     orderData
   ) => {
 
-    // Don't place empty order
-
     if (cart.length === 0) {
       return
     }
@@ -539,11 +549,12 @@ function App() {
     wishlist.length
 
 
-  // =========================
-  // RETURN
-  // =========================
+  // =================================================
+  // CUSTOMER SHOP PAGE
+  // =================================================
 
-  return (
+  const shopPage = (
+
     <>
 
       {/* =================================================
@@ -559,13 +570,19 @@ function App() {
           ========================== */}
 
           <Navbar
-            cartCount={cartCount}
+
+            cartCount={
+              cartCount
+            }
+
             wishlistCount={
               wishlistCount
             }
+
             onCartClick={() =>
               setCartOpen(true)
             }
+
           />
 
 
@@ -581,9 +598,11 @@ function App() {
           ========================== */}
 
           <Categories
+
             onCategorySelect={
               setSelectedCategory
             }
+
           />
 
 
@@ -592,6 +611,7 @@ function App() {
           ========================== */}
 
           <ProductSection
+
             onAddToCart={
               addToCart
             }
@@ -611,6 +631,7 @@ function App() {
             onToggleWishlist={
               toggleWishlist
             }
+
           />
 
 
@@ -635,7 +656,9 @@ function App() {
 
           <Cart
 
-            cart={cart}
+            cart={
+              cart
+            }
 
             onClose={() =>
               setCartOpen(false)
@@ -674,7 +697,9 @@ function App() {
 
         <Checkout
 
-          cart={cart}
+          cart={
+            cart
+          }
 
           onBack={() =>
             setCheckoutOpen(false)
@@ -723,7 +748,9 @@ function App() {
 
       <Toast
 
-        toast={toast}
+        toast={
+          toast
+        }
 
         onClose={() =>
           setToast(null)
@@ -731,9 +758,64 @@ function App() {
 
       />
 
-      <AdminOrders/>
-
     </>
+
+  )
+
+
+  // =================================================
+  // ROUTES
+  // =================================================
+
+  return (
+
+    <BrowserRouter>
+
+      <Routes>
+
+        {/* =========================
+            CUSTOMER WEBSITE
+        ========================== */}
+
+        <Route
+          path="/"
+          element={
+            shopPage
+          }
+        />
+
+
+        {/* =========================
+            ADMIN ORDERS
+        ========================== */}
+
+        <Route
+  path="/admin"
+  element={<AdminDashboard />}
+/>
+
+<Route
+  path="/admin/products"
+  element={<AdminProducts />}
+/>
+
+
+
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminOrders />
+          }
+        />
+        <Route
+  path="/admin/categories"
+  element={<AdminCategories />}
+/>
+
+      </Routes>
+
+    </BrowserRouter>
+
   )
 
 }

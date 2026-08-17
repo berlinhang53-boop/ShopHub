@@ -1,11 +1,14 @@
 import { useState } from "react"
 
+import { useNavigate } from "react-router-dom"
+
 function Navbar({
   cartCount,
   wishlistCount,
   onCartClick,
 }) {
 
+const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
 
 
@@ -116,6 +119,13 @@ function Navbar({
               ? "✕"
               : "☰"}
           </button>
+
+          <button
+  onClick={() => navigate("/admin")}
+  className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-600"
+>
+  Admin
+</button>
 
         </div>
 
