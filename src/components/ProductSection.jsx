@@ -1,273 +1,4 @@
 
-
-
-
-// import { useState } from "react"
-
-// import products from "../data/product"
-
-// import ProductCard from "./ProductCard"
-
-// import ProductDetails from "./ProductDetails"
-
-
-// function ProductSection({
-//   onAddToCart,
-//   selectedCategory,
-//   onCategorySelect,
-//   wishlist,
-//   onToggleWishlist,
-// }) {
-
-//   // =========================
-//   // SEARCH
-//   // =========================
-
-//   const [search, setSearch] = useState("")
-
-
-//   // =========================
-//   // SELECTED PRODUCT
-//   // =========================
-
-//   const [selectedProduct, setSelectedProduct] =
-//     useState(null)
-
-
-//   // =========================
-//   // CATEGORIES
-//   // =========================
-
-//   const categories = [
-//     "All",
-//     "Electronics",
-//     "Fashion",
-//     "Accessories",
-//     "Sports",
-//   ]
-
-
-//   // =========================
-//   // FILTER PRODUCTS
-//   // =========================
-
-//   const filteredProducts =
-//     products.filter((product) => {
-
-//       const matchesCategory =
-//         selectedCategory === "All" ||
-//         product.category === selectedCategory
-
-
-//       const matchesSearch =
-//         product.name
-//           .toLowerCase()
-//           .includes(
-//             search.toLowerCase()
-//           )
-
-
-//       return (
-//         matchesCategory &&
-//         matchesSearch
-//       )
-
-//     })
-
-
-//   return (
-//     <section
-//       id="products"
-//       className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20"
-//     >
-
-
-//       {/* =========================
-//           HEADING
-//       ========================== */}
-
-//       <div className="text-center">
-
-//         <p className="text-sm font-semibold text-blue-600">
-//           OUR PRODUCTS
-//         </p>
-
-//         <h2 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-//           Featured Products
-//         </h2>
-
-//         <p className="mx-auto mt-4 max-w-xl text-sm text-gray-500 sm:text-base">
-//           Browse our collection and find something you love.
-//         </p>
-
-//       </div>
-
-
-//       {/* =========================
-//           SEARCH
-//       ========================== */}
-
-//       <div className="mx-auto mt-8 max-w-xl sm:mt-10">
-
-//         <input
-//           type="text"
-//           placeholder="Search products..."
-//           value={search}
-//           onChange={(e) =>
-//             setSearch(e.target.value)
-//           }
-//           className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:px-5 sm:text-base"
-//         />
-
-//       </div>
-
-
-//       {/* =========================
-//           CATEGORY FILTERS
-//       ========================== */}
-
-//       <div className="mt-6 flex gap-2 overflow-x-auto pb-2 sm:mt-8 sm:flex-wrap sm:justify-center sm:overflow-visible">
-
-//         {categories.map(
-//           (category) => (
-
-//             <button
-//               key={category}
-//               onClick={() =>
-//                 onCategorySelect(
-//                   category
-//                 )
-//               }
-//               className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition sm:px-5 ${
-//                 selectedCategory === category
-//                   ? "bg-blue-600 text-white"
-//                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-//               }`}
-//             >
-//               {category}
-//             </button>
-
-//           )
-//         )}
-
-//       </div>
-
-
-//       {/* =========================
-//           PRODUCTS
-//       ========================== */}
-
-//       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
-
-//         {filteredProducts.length > 0 ? (
-
-//           filteredProducts.map(
-//             (product) => (
-
-//               <ProductCard
-//                 key={product.id}
-//                 product={product}
-
-//                 onAddToCart={
-//                   onAddToCart
-//                 }
-
-//                 onProductClick={
-//                   setSelectedProduct
-//                 }
-
-//                 wishlist={
-//                   wishlist
-//                 }
-
-//                 onToggleWishlist={
-//                   onToggleWishlist
-//                 }
-//               />
-
-//             )
-//           )
-
-//         ) : (
-
-//           <div className="col-span-full py-16 text-center">
-
-//             <p className="text-lg font-semibold text-gray-700">
-//               No products found
-//             </p>
-
-//             <p className="mt-2 text-sm text-gray-500">
-//               Try another search or category.
-//             </p>
-
-//           </div>
-
-//         )}
-
-//       </div>
-
-
-//       {/* =========================
-//           PRODUCT DETAILS
-//       ========================== */}
-
-//       {selectedProduct && (
-
-//         <ProductDetails
-//           product={
-//             selectedProduct
-//           }
-
-//           onClose={() =>
-//             setSelectedProduct(null)
-//           }
-
-//           onAddToCart={
-//             onAddToCart
-//           }
-
-//           wishlist={
-//             wishlist
-//           }
-
-//           onToggleWishlist={
-//             onToggleWishlist
-//           }
-//         />
-
-//       )}
-
-//     </section>
-//   )
-// }
-
-
-// export default ProductSection
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { useEffect, useState } from "react"
 
 import ProductCard from "./ProductCard"
@@ -292,9 +23,7 @@ function ProductSection({
   // =========================
 
   const [products, setProducts] = useState([])
-
   const [loading, setLoading] = useState(true)
-
   const [error, setError] = useState("")
 
 
@@ -333,7 +62,6 @@ function ProductSection({
       try {
 
         setLoading(true)
-
         setError("")
 
         const data = await getProducts()
@@ -379,11 +107,11 @@ function ProductSection({
 
         const data = await getCategories()
 
-
-        const categoryNames = data.map(
-          (category) => category.name
-        )
-
+        const categoryNames =
+          data.map(
+            (category) =>
+              category.name
+          )
 
         setCategories([
           "All",
@@ -440,222 +168,307 @@ function ProductSection({
 
     <section
       id="products"
-      className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20"
+      className="bg-gray-50 px-4 py-16 sm:px-6 sm:py-20"
     >
 
-
-      {/* =========================
-          HEADING
-      ========================== */}
-
-      <div className="text-center">
-
-        <p className="text-sm font-semibold text-blue-600">
-          OUR PRODUCTS
-        </p>
+      <div className="mx-auto max-w-7xl">
 
 
-        <h2 className="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-          Featured Products
-        </h2>
+        {/* =========================
+            SECTION HEADER
+        ========================== */}
+
+        <div className="text-center">
+
+          <span className="inline-flex items-center rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-blue-700">
+            Our Collection
+          </span>
 
 
-        <p className="mx-auto mt-4 max-w-xl text-sm text-gray-500 sm:text-base">
-          Browse our collection and find something you love.
-        </p>
-
-      </div>
+          <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+            Featured Products
+          </h2>
 
 
-      {/* =========================
-          SEARCH
-      ========================== */}
-
-      <div className="mx-auto mt-8 max-w-xl sm:mt-10">
-
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-          className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:px-5 sm:text-base"
-        />
-
-      </div>
-
-
-      {/* =========================
-          CATEGORY FILTERS
-      ========================== */}
-
-      <div className="mt-6 flex gap-2 overflow-x-auto pb-2 sm:mt-8 sm:flex-wrap sm:justify-center sm:overflow-visible">
-
-        {categories.map(
-          (category) => (
-
-            <button
-              key={category}
-
-              onClick={() =>
-                onCategorySelect(
-                  category
-                )
-              }
-
-              className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition sm:px-5 ${
-                selectedCategory === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-
-              {category}
-
-            </button>
-
-          )
-        )}
-
-      </div>
-
-
-      {/* =========================
-          LOADING
-      ========================== */}
-
-      {loading && (
-
-        <div className="py-20 text-center">
-
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600">
-          </div>
-
-          <p className="mt-4 text-sm text-gray-500">
-            Loading products...
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-gray-500 sm:text-base">
+            Discover our carefully selected collection
+            of quality products at great prices.
           </p>
 
         </div>
 
-      )}
+
+        {/* =========================
+            SEARCH + FILTER AREA
+        ========================== */}
+
+        <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
 
 
-      {/* =========================
-          ERROR
-      ========================== */}
+          {/* SEARCH */}
 
-      {!loading && error && (
+          <div className="relative mx-auto max-w-2xl">
 
-        <div className="py-20 text-center">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+              🔍
+            </div>
 
-          <div className="mx-auto max-w-md rounded-2xl border border-red-200 bg-red-50 p-6">
 
-            <p className="text-lg font-semibold text-red-700">
-              Something went wrong
-            </p>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3.5 pl-11 pr-4 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 sm:text-base"
+            />
 
-            <p className="mt-2 text-sm text-red-600">
-              {error}
-            </p>
+
+            {search && (
+
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="absolute inset-y-0 right-0 flex items-center pr-4 text-sm font-semibold text-gray-400 transition hover:text-gray-700"
+              >
+                ✕
+              </button>
+
+            )}
+
+          </div>
+
+
+          {/* CATEGORY FILTER */}
+
+          <div className="mt-5">
+
+            <div className="mb-3 flex items-center justify-between">
+
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                Browse Categories
+              </p>
+
+
+              <p className="text-xs font-medium text-gray-400">
+                {filteredProducts.length} products
+              </p>
+
+            </div>
+
+
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap">
+
+              {categories.map(
+                (category) => (
+
+                  <button
+                    key={category}
+                    type="button"
+                    onClick={() =>
+                      onCategorySelect(
+                        category
+                      )
+                    }
+                    className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition duration-200 ${
+                      selectedCategory === category
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-200"
+                        : "border border-gray-200 bg-white text-gray-600 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                    }`}
+                  >
+
+                    {category}
+
+                  </button>
+
+                )
+              )}
+
+            </div>
 
           </div>
 
         </div>
 
-      )}
 
+        {/* =========================
+            LOADING
+        ========================== */}
 
-      {/* =========================
-          PRODUCTS
-      ========================== */}
+        {loading && (
 
-      {!loading && !error && (
+          <div className="grid grid-cols-1 gap-5 pt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+            {[1, 2, 3, 4].map(
+              (item) => (
 
-          {filteredProducts.length > 0 ? (
+                <div
+                  key={item}
+                  className="overflow-hidden rounded-2xl border border-gray-200 bg-white"
+                >
 
-            filteredProducts.map(
-              (product) => (
+                  <div className="h-64 animate-pulse bg-gray-200" />
 
-                <ProductCard
-                  key={product.id}
+                  <div className="space-y-3 p-5">
 
-                  product={product}
+                    <div className="h-3 w-20 animate-pulse rounded bg-gray-200" />
 
-                  onAddToCart={
-                    onAddToCart
-                  }
+                    <div className="h-5 w-3/4 animate-pulse rounded bg-gray-200" />
 
-                  onProductClick={
-                    setSelectedProduct
-                  }
+                    <div className="h-4 w-1/2 animate-pulse rounded bg-gray-200" />
 
-                  wishlist={
-                    wishlist
-                  }
+                    <div className="h-10 w-full animate-pulse rounded-lg bg-gray-200" />
 
-                  onToggleWishlist={
-                    onToggleWishlist
-                  }
-                />
+                  </div>
+
+                </div>
 
               )
-            )
+            )}
 
-          ) : (
+          </div>
 
-            <div className="col-span-full py-16 text-center">
+        )}
 
-              <p className="text-lg font-semibold text-gray-700">
-                No products found
-              </p>
 
-              <p className="mt-2 text-sm text-gray-500">
-                Try another search or category.
+        {/* =========================
+            ERROR
+        ========================== */}
+
+        {!loading && error && (
+
+          <div className="py-12">
+
+            <div className="mx-auto max-w-lg rounded-2xl border border-red-200 bg-white p-8 text-center shadow-sm">
+
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-100 text-2xl">
+                ⚠️
+              </div>
+
+
+              <h3 className="mt-4 text-lg font-bold text-gray-900">
+                Something went wrong
+              </h3>
+
+
+              <p className="mt-2 text-sm leading-6 text-gray-500">
+                {error}
               </p>
 
             </div>
 
-          )}
+          </div>
 
-        </div>
-
-      )}
+        )}
 
 
-      {/* =========================
-          PRODUCT DETAILS
-      ========================== */}
+        {/* =========================
+            PRODUCTS
+        ========================== */}
 
-      {selectedProduct && (
+        {!loading && !error && (
 
-        <ProductDetails
+          <div className="mt-8">
 
-          product={
-            selectedProduct
-          }
+            {filteredProducts.length > 0 ? (
 
-          onClose={() =>
-            setSelectedProduct(null)
-          }
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
 
-          onAddToCart={
-            onAddToCart
-          }
+                {filteredProducts.map(
+                  (product) => (
 
-          wishlist={
-            wishlist
-          }
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      onAddToCart={
+                        onAddToCart
+                      }
+                      onProductClick={
+                        setSelectedProduct
+                      }
+                      wishlist={
+                        wishlist
+                      }
+                      onToggleWishlist={
+                        onToggleWishlist
+                      }
+                    />
 
-          onToggleWishlist={
-            onToggleWishlist
-          }
+                  )
+                )}
 
-        />
+              </div>
 
-      )}
+            ) : (
+
+              /* =========================
+                 NO RESULTS
+              ========================== */
+
+              <div className="rounded-2xl border border-gray-200 bg-white px-6 py-16 text-center shadow-sm">
+
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-2xl">
+                  🔍
+                </div>
+
+
+                <h3 className="mt-5 text-xl font-bold text-gray-900">
+                  No products found
+                </h3>
+
+
+                <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">
+                  We couldn't find any products matching
+                  your search or selected category.
+                </p>
+
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("")
+                    onCategorySelect("All")
+                  }}
+                  className="mt-6 rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-600"
+                >
+                  Clear Filters
+                </button>
+
+              </div>
+
+            )}
+
+          </div>
+
+        )}
+
+
+        {/* =========================
+            PRODUCT DETAILS
+        ========================== */}
+
+        {selectedProduct && (
+
+          <ProductDetails
+            product={selectedProduct}
+            onClose={() =>
+              setSelectedProduct(null)
+            }
+            onAddToCart={
+              onAddToCart
+            }
+            wishlist={
+              wishlist
+            }
+            onToggleWishlist={
+              onToggleWishlist
+            }
+          />
+
+        )}
+
+      </div>
 
     </section>
 

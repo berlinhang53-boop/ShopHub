@@ -178,6 +178,8 @@ import AdminProducts from "./components/AdminProducts"
 
 import AdminCategories from "./components/AdminCategories"
 
+import AdminLogin from "./components/AdminLogin"
+
 import {
   BrowserRouter,
   Routes,
@@ -810,6 +812,12 @@ function App() {
         <Route
   path="/admin/categories"
   element={<AdminCategories />}
+/>
+
+
+<Route
+  path="/admin-login"
+  element={<AdminLogin />}
 />
 
       </Routes>
