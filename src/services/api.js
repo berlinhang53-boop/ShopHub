@@ -2,6 +2,19 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
 
+
+
+function getAuthHeaders() {
+
+  const token =
+    localStorage.getItem("adminToken");
+
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+  };
+}
+
 // ==========================================
 // GET ALL PRODUCTS
 // ==========================================
@@ -109,9 +122,58 @@ export async function getCategories() {
 // CREATE PRODUCT
 // ==========================================
 
-export async function createProduct(
-  productData
-) {
+// export async function createProduct(
+//   productData
+// ) {
+
+//   const response =
+//     await fetch(
+//       `${API_URL}/products`,
+//       {
+//         method: "POST",
+
+//         headers: {
+//           "Content-Type":
+//             "application/json",
+//         },
+
+//         body:
+//           JSON.stringify(
+//             productData
+//           ),
+//       }
+//     );
+
+//   const data =
+//     await response
+//       .json()
+//       .catch(() => null);
+
+//   if (!response.ok) {
+
+//     console.error(
+//       "Create Product Error:",
+//       data
+//     );
+
+//     throw new Error(
+//       data?.message ||
+//       data?.title ||
+//       "Failed to create product"
+//     );
+
+//   }
+
+//   return data;
+// }
+
+
+
+
+
+
+
+export async function createProduct(productData) {
 
   const response =
     await fetch(
@@ -119,22 +181,19 @@ export async function createProduct(
       {
         method: "POST",
 
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
+        headers: getAuthHeaders(),
 
         body:
-          JSON.stringify(
-            productData
-          ),
+          JSON.stringify(productData),
       }
     );
+
 
   const data =
     await response
       .json()
       .catch(() => null);
+
 
   if (!response.ok) {
 
@@ -154,6 +213,61 @@ export async function createProduct(
   return data;
 }
 
+// ==========================================
+// UPDATE PRODUCT
+// ==========================================
+
+// export async function updateProduct(
+//   id,
+//   productData
+// ) {
+
+//   const response =
+//     await fetch(
+//       `${API_URL}/products/${id}`,
+//       {
+//         method: "PUT",
+
+//         headers: {
+//           "Content-Type":
+//             "application/json",
+//         },
+
+//         body:
+//           JSON.stringify(
+//             productData
+//           ),
+//       }
+//     );
+
+//   const data =
+//     await response
+//       .json()
+//       .catch(() => null);
+
+//   if (!response.ok) {
+
+//     console.error(
+//       "Update Product Error:",
+//       data
+//     );
+
+//     throw new Error(
+//       data?.message ||
+//       data?.title ||
+//       "Failed to update product"
+//     );
+
+//   }
+
+//   return data;
+// }
+
+
+
+
+
+
 
 // ==========================================
 // UPDATE PRODUCT
@@ -170,22 +284,19 @@ export async function updateProduct(
       {
         method: "PUT",
 
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
+        headers: getAuthHeaders(),
 
         body:
-          JSON.stringify(
-            productData
-          ),
+          JSON.stringify(productData),
       }
     );
+
 
   const data =
     await response
       .json()
       .catch(() => null);
+
 
   if (!response.ok) {
 
@@ -205,27 +316,72 @@ export async function updateProduct(
   return data;
 }
 
+// ==========================================
+// DELETE PRODUCT
+// ==========================================
+
+// export async function deleteProduct(
+//   id
+// ) {
+
+//   const response =
+//     await fetch(
+//       `${API_URL}/products/${id}`,
+//       {
+//         method: "DELETE",
+//       }
+//     );
+
+//   const data =
+//     await response
+//       .json()
+//       .catch(() => null);
+
+//   if (!response.ok) {
+
+//     console.error(
+//       "Delete Product Error:",
+//       data
+//     );
+
+//     throw new Error(
+//       data?.message ||
+//       data?.title ||
+//       "Failed to delete product"
+//     );
+
+//   }
+
+//   return data;
+// }
+
+
+
+
+
 
 // ==========================================
 // DELETE PRODUCT
 // ==========================================
 
-export async function deleteProduct(
-  id
-) {
+export async function deleteProduct(id) {
 
   const response =
     await fetch(
       `${API_URL}/products/${id}`,
       {
         method: "DELETE",
+
+        headers: getAuthHeaders(),
       }
     );
+
 
   const data =
     await response
       .json()
       .catch(() => null);
+
 
   if (!response.ok) {
 
@@ -244,7 +400,6 @@ export async function deleteProduct(
 
   return data;
 }
-
 
 // ==========================================
 // CREATE ORDER

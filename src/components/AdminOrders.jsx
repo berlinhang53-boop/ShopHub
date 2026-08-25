@@ -5,6 +5,7 @@ import {
   getOrders,
   updateOrderStatus,
 } from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 
 function AdminOrders() {
@@ -12,6 +13,8 @@ function AdminOrders() {
   // ==========================================
   // ORDERS
   // ==========================================
+  
+  const navigate= useNavigate();
 
   const [orders, setOrders] = useState([]);
 
@@ -936,10 +939,11 @@ function AdminOrders() {
                   <div className="flex items-center gap-3">
 
                     <h2 className="text-xl font-bold text-slate-900">
-                      Order #{selectedOrder.id}
+                      Order #{selectedOrder.id} 
                     </h2>
+ 
 
-
+                      
                     <span
                       className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ${getStatusClass(
                         selectedOrder.status ||
@@ -973,7 +977,8 @@ function AdminOrders() {
 
                   onClick={() =>
                     setSelectedOrder(null)
-                  }
+                  }  
+                  
 
                   className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
                 >
@@ -984,7 +989,7 @@ function AdminOrders() {
 
               </div>
 
-            </div>
+            </div>  
 
 
             <div className="p-6 sm:p-8">
@@ -1129,7 +1134,6 @@ function AdminOrders() {
 
                           )}
 
-
                           {/* PRODUCT */}
 
                           <div className="min-w-0 flex-1">
@@ -1230,7 +1234,21 @@ function AdminOrders() {
 
             </div>
 
-          </div>
+              {/* <button onClick={()=>navigate("/admin")}>Back to Admin Dashboard</button> */}
+
+              <button
+              onClick={() => navigate("/admin")}
+              className="mt-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 hover:shadow-md"
+            >
+  <span className="text-base">←</span>
+  Back to Admin Dashboard
+</button>
+            
+            </div>
+              
+
+          
+          
 
         )}
 
@@ -1244,4 +1262,3 @@ function AdminOrders() {
 
 
 export default AdminOrders;
-
